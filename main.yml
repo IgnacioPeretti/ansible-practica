@@ -10,47 +10,26 @@
     - vars/vars-site.yml
   tasks:
     - name: Instalar servicio Apache
-      include_tasks: includes/install-apache2.yml
-    - name: crear directorio para el sitio
-      file:
-        path: "{{ site_dir }}"
-        state: directory
-        owner: www-data
-        group: www-data
-      when: is_ubuntu
-    - name: copiar index.html al directorio del sitio
-      copy:
-        src: files/index.html
-        dest: "{{ site_dir }}"
-        owner: www-data
-        group: www-data
-        mode: '0644'
-      when: is_ubuntu
+      include_tasks: includes/apache/install-apache2.yml
+
+    - name: Crear directorio para el sitio
+      include_tasks: includes/site-estatic/create-directory.yml
+
+    - name: Copiar index.html al directorio del sitio
+      include_tasks: includes/site-estatic/copy-index.yml
+
     - name: Configuracion del sitio apache
-      template:
-        src: templates/ansible_site.conf.j2
-        dest: /etc/apache2/sites-available/ansible_site.conf
-      notify:
-        - Reload Apache
-      when: is_ubuntu
+      include_tasks: includes/apache/config-apache2.yml
+
     - name: Activa el nuevo sitio
-      command: a2ensite ansible_site.conf
-      notify:
-        - Reload Apache
-      when: is_ubuntu
+      include_tasks: includes/site-estatic/activation-site.yml
+
     - name: Deshabilita el sitio default
-      command: a2dissite 000-default.conf
-      notify:
-        - Reload Apache
-      when: is_ubuntu
+      include_tasks: includes/site-estatic/desable-default-site.yml
+
     - name: Cambiar el e-mail del webmaster
-      lineinfile:
-        path: /etc/apache2/sites-available/000-default.conf
-        regexp: 'ServerAdmin webmaster@localhost'
-        line: '	ServerAdmin webmaster@educacionit.com'
-      when: is_ubuntu
-      notify:
-      - Reload Apache
+      include_tasks: includes/site-estatic/change-email.yml
+      
   handlers:
     - name: Reload Apache
       service:
