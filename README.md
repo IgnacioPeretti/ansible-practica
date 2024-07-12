@@ -24,9 +24,6 @@ Estas dos carpetas fueron creadas dentro de la carpeta ya creada
 Con esto logramos dejar el código más legible y así podemos ubicar las
 tareas directamente desde sus archivos específicos y ordenadas en sus
 carpetas según las funciones que cumplen.
-Ahora podemos ver como queda el archivo “main” luego de realizar los
-cambios y renombrando las tareas para que quede de una manera más
-ordenada.
 
 En el pdf podemos ver una correcta salida, realizada desde la instancia controller
 en la shell de multipass.
